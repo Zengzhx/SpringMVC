@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	id="WebApp_ID" version="3.0">
+
+	<!-- <filter> <filter-name>characterFilter</filter-name> <filter-class>com.ez.dp.context.CharacterEncodingFilter</filter-class> 
+		<init-param> <param-name>encoding</param-name> <param-value>UTF-8</param-value> 
+		</init-param> </filter> <filter-mapping> <filter-name>characterFilter</filter-name> 
+		<url-pattern>/*</url-pattern> </filter-mapping> -->
+
+
+
+	<!-- 加载Spring方式 通过监听 加载 -->
+	<!-- <listener> <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class> 
+		</listener> <context-param> <param-name>contextConfigLocation</param-name> 
+		<param-value>/WEB-INF/springcontext.xml</param-value> </context-param> -->
+	<listener><!-- 父子上下文(WebApplicationContext) 主要用于整合框架，如集成Hibernate|mybatis -->
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<servlet><!-- 主要用于 请求调度 -->
+		<servlet-name>SpringMVC</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param> <!-- 如果不自定义配置文件 ，则在DispatcherServlet的初始化过程中， 框架会在web应用的 WEB-INF文件夹下寻找名为[servlet-name]-servlet.xml 
+				的配置文件，生成文件中定义的bean。 -->
+			<param-name>contextConfigLocation</param-name>
+			<!-- <param-value>classpath*:springcontext.xml</param-value> classpath*：统配全项目路径 
+				， classpath: /主要从src中目录下 扫描文件 -->
+			<param-value>/WEB-INF/springcontext.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup> <!-- 是启动顺序，让这个Servlet随web容器一起启动。 -->
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>SpringMVC</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+
+
+	<!-- 说明 ：Spring 并没有限制我们，必须使用父子上下文。我们可以自己决定如何使用。
+		 方案一，传统型： 父上下文容器中保存数据源、服务层、DAO层、事务的Bean。 
+			      子上下文容器中保存Mvc相关的Action的Bean. 事务控制在服务层。 
+			      由于父上下文容器不能访问子上下文容器中内容，事务的Bean在父上下文容器中，
+			      无法访问子上下文容器中内容，就无法对子上下文容器中Action进行AOP（事务）。 
+			      当然，做为“传统型”方案，也没有必要这要做。
+		方案二，激进型：Java世界的“面向接口编程”的思想是正确的，但在增删改查为主业务的系统里，
+			  Dao层接口，Dao层实现类，Service层接口，Service层实现类，Action父类，Action。
+			     再加上众多的O(vo\po\bo)和jsp页面。写一个小功能 7、8个类就写出来了。 开发者说我就是想接点私活儿，
+			     和PHP，ASP抢抢饭碗，但我又是Java程序员。最好的结果是大项目能做好，小项目能做快。
+			     所以“激进型”方案就出现了=======没有接口、没有Service层、还可以没有众多的O(vo\po\bo)。
+			     那没有Service层事务控制在哪一层？只好上升的Action层。本文不想说这是不是正确的思想，我想说的是Spring不会限制你这样做。
+			     由于有了父子上下文，你将无法实现这一目标。解决方案是只使用子上下文容器，不要父上下文容器 。所以数据源、服务层、DAO层、
+			     事务的Bean、Action的Bean都放在子上下文容器中。就可以实现了，事务（注解事务）就正常工作了。这样才够激进。
+		 总结：不使用listener监听器来加载spring的配置文件，只使用DispatcherServlet来加载spring的配置，
+			     不要父子上下文，只使用一个DispatcherServlet，事情就简单了，什么麻烦事儿也没有了。
+ 		Java===大项目能做好====按传统方式做，规规矩矩的做，好扩展，好维护。
+		Java===小项目能做快====按激进方式做，一周时间就可以出一个版本，先上线接受市场(用户)的反馈，再改进，再反馈，时间就是生命(成本)。-->
+
+
+
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+</web-app>
