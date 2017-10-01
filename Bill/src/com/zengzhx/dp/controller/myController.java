@@ -16,6 +16,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.zengzhx.dp.model.User;
 
 @Controller //控制类
+@RequestMapping("/mvc")
 public class myController {
 	
 	@Autowired  //自动装配

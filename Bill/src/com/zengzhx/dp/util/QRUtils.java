@@ -32,8 +32,11 @@ public class QRUtils {
 
 	/**
 	 * 根据指定的内容生成二维码,大小采用默认值
-	 * @param content 二维码内容
-	 * @param target 二维码输出目标文件
+	 * 
+	 * @param content
+	 *            二维码内容
+	 * @param target
+	 *            二维码输出目标文件
 	 * @throws WriterException
 	 * @throws IOException
 	 */
@@ -42,14 +45,37 @@ public class QRUtils {
 	}
 
 	/**
+	 * 生成二维码
+	 * @param content
+	 * @return
+	 * @throws WriterException
+	 */
+	public static BufferedImage genBarcode(String content) throws WriterException {
+		return genBarcode(content, SIDE_LENGTH);
+	}
+
+	public static BufferedImage genBarcode(String content, int sideLength) throws WriterException {
+		Validate.notBlank(content);
+		Hashtable<EncodeHintType, Object> hints = new Hashtable<EncodeHintType, Object>();
+		hints.put(EncodeHintType.MARGIN, 1);
+		hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.Q);
+		hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+		BitMatrix matrix = mutiWriter.encode(content, BarcodeFormat.QR_CODE, sideLength, sideLength, hints);
+		BufferedImage image = MatrixToImageWriter.toBufferedImage(matrix);
+		return image;
+	}
+
+	/**
 	 * 根据指定的内容生成二维码,大小有参数指定
-	 * @param content 二维码内容
-	 * @param target 二维码输出目标文件
+	 * 
+	 * @param content
+	 *            二维码内容
+	 * @param target
+	 *            二维码输出目标文件
 	 * @throws WriterException
 	 * @throws IOException
 	 */
-	public static void genBarcode(String content, int sideLength, File target)
-			throws WriterException, IOException {
+	public static void genBarcode(String content, int sideLength, File target) throws WriterException, IOException {
 		Validate.notBlank(content);
 		Hashtable<EncodeHintType, Object> hints = new Hashtable<EncodeHintType, Object>();
 		hints.put(EncodeHintType.MARGIN, 1);
@@ -61,9 +87,13 @@ public class QRUtils {
 
 	/**
 	 * 根据指定内容和嵌入的logo生成二维码,大小采用默认值
-	 * @param content 二维码内容
-	 * @param logo 嵌入二维码中心的logo
-	 * @param target 二维码输出目标文件
+	 * 
+	 * @param content
+	 *            二维码内容
+	 * @param logo
+	 *            嵌入二维码中心的logo
+	 * @param target
+	 *            二维码输出目标文件
 	 * @throws WriterException
 	 * @throws IOException
 	 */
@@ -73,9 +103,13 @@ public class QRUtils {
 
 	/**
 	 * 根据指定内容和嵌入的logo生成二维码,大小有参数指定
-	 * @param content 二维码内容
-	 * @param logo 嵌入二维码中心的logo
-	 * @param target 二维码输出目标文件
+	 * 
+	 * @param content
+	 *            二维码内容
+	 * @param logo
+	 *            嵌入二维码中心的logo
+	 * @param target
+	 *            二维码输出目标文件
 	 * @throws WriterException
 	 * @throws IOException
 	 */
@@ -92,10 +126,10 @@ public class QRUtils {
 		int[][] logoPixels = logoScale(logo, sideLength / LOGO_RATIO, sideLength / LOGO_RATIO, false);
 
 		BufferedImage image = merge(matrix, logoPixels, sideLength);
-		
+
 		ImageIO.write(image, "jpg", target);
 	}
-	
+
 	/*
 	 * 将图片嵌入二维码中心位置
 	 */
@@ -170,7 +204,7 @@ public class QRUtils {
 			graphic.dispose();
 			destImage = image;
 		}
-		
+
 		BufferedImage scaleImage = (BufferedImage) destImage;
 		int[][] logoPixels = new int[width][height];
 		for (int i = 0; i < scaleImage.getWidth(); i++) {

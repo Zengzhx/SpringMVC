@@ -4,9 +4,10 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>login</title>
 </head>
 <body>
-	hello springMVC
+	name =  ${user.name}<br/>
+	pwd = ${user.pwd}
 </body>
 </html>

@@ -74,7 +74,7 @@
 	       	 <!-- <mvc:mapping path="/" />   -->
 	       	<!--  <mvc:mapping path="/user/**" />  -->
 	       	 <!-- <mvc:mapping path="/**" /> -->
-	       	 <mvc:mapping path="/*"/>
+	       	 <mvc:mapping path="/"/>
        		 <bean class="com.zengzhx.dp.Inteceptor.myInteceptor"></bean>    
         </mvc:interceptor>  
     </mvc:interceptors>
